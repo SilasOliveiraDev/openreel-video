@@ -139,7 +139,12 @@ export async function apiFetch(
       authHeaders["anthropic-dangerous-direct-browser-access"] = "true";
       if (apiKey) {
         authHeaders["x-api-key"] = apiKey;
-        authHeaders.Authorization = `Bearer ${apiKey}`;
+        // The official Anthropic API authenticates API keys via x-api-key only;
+        // a Bearer header there is treated as a different credential type and
+        // rejected. Third-party Anthropic-compatible gateways may still want it.
+        if (new URL(normalizedBaseUrl).hostname !== "api.anthropic.com") {
+          authHeaders.Authorization = `Bearer ${apiKey}`;
+        }
       }
     }
     return fetch(`${normalizedBaseUrl}${path}`, {
