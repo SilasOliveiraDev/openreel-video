@@ -8,7 +8,9 @@ import {
   type WhisperModelKey,
 } from "./whisper-models";
 
-const MODEL_HOST = "https://media.openreel.video/models/";
+// Load straight from Hugging Face: the upstream media.openreel.video mirror
+// only allows CORS from app.openreel.video, so it fails on any other domain.
+const MODEL_HOST = "https://huggingface.co/";
 
 env.allowLocalModels = false;
 env.allowRemoteModels = true;
